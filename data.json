@@ -1,0 +1,24 @@
+{
+    "channels": {
+        "-1003737802188": {
+            "title": "Test",
+            "link": "https://t.me/+oz6okwW6S6k1MjZl"
+        }
+    },
+    "sessions": [
+        "BQIuzeAAX2cEn-Jl8nAHp9yvP85Ajl3St-YQqFu-d3QxVNLuqEOCmdEMFcUADwnGPD8PbdoWm_0T4x2VxrrA9wClYIP5DOFGU9Ij5jLjTSLcoNnpJ1hjpqofRwbT1HfCzAjlDEj6xRk5esKPmaGZOoe0JifjtYmhDkMOJyCBdOJfqQM1jX23t9BG67_zkuCk5i-SKLpLYYi_eL_Rnm0KPrGHJzn_0cr9kbL5crxRY5DaV8rjBN1gMJSieML18kHUWOKcnSyvdPrGzrtSkgVv2Wkelqg--fobyztUO5pe3WCJi4WyraytFIWxrhzqzuqFaKqL5sPEIKz1BbXNoVerZSqDvmBVjgAAAAF0JOuuAA",
+        "BQIuzeAAH6sZKWq5O1FcmzP5bc7AKRNmWArfqOfKcj3HVRo4_xbfHW1n9oLBX2aMR_I1pwHfnN_SiQfiV6F6Mndts28_CYy_p3jqmyGW_u8ghQsvv29mMonsL2p9Ooti0hY7KKUYeFHo6klGr4xn8p76D6dOTgCyV4yMIRIu566gjIen1Z7IA-DFfax_tpj3JcARnTyWZHDqmIwPQ5HBrSqjdfx7Li3ED370oI-AYVnOfAw7k-KdEqo1aFL2Q8RtLI-fnBft-Swxz6Pemftbcn_VKDjzNYt9v9jwc_wAjVgZouLDBfUitIFkqXq85B2Eum3ODjbK2gU-C2SWuMbWJM-puZK3aAAAAAFh_VzQAA",
+        "BQIuzeAAcycEPXOdvLAzMATREqfsVGg5HcEnWaG8hXvx6gpVJJIWtNTxSYps6y4qbEvova0WiY6z9rWy2DUzm1pYffEQszdJPyZ2TSN__UZ2nt59QsHVyixlowni6evo6fYec1JaiEIlAVPmVwpdAUEnaJzXtrOWnSAtAQCuotPQl1keMI_92mkNETjzZrPCU_4jUznOeGp1tWl2uq_nh4W9bsH84Mpyh2Do-ZQa95Ss-R6ABEwmpiO-S6NSGyB8geNsjbWUSA-Kyc8rXT9uCob_kXXG1IkZFpZ7Q0XboKC7MVAsNI-xYXicG8G2mXbupvUXlf6yvxutwjMeWsqoiaOryg7E_wAAAAFdf1rYAA",
+        "BQIuzeAApp4HpC47k9rbAgcHT7C30YHfrtKvP0c3W3P9X5NwJ9sGm7h8PTy1qyi16CEB92RLUt-AVCL_j5VTGnqHRvGjQvqhp2zendNWCsciZCcBgP9NFk3J9PC_jYomi9Ov_xpd4XR8sFxb3dUh4GDQVVRIABOTrH-svC0jDxfzQhDS1FgCHqNSNhhRfj6r_d2md9Y46hd8pJo-T9iuUbFEgbMrEvmP-Cu31vCfNBgkMYeRjrXHEV1MtYY9JDkLBe_4fGPJS_rKYSTAHLYvYW80TyOtAco7DpAQrngfjT_lQEkwHjqjyI9eshIzjbALXpX3L0jniZhsg6nJLSuYOx4XKJAhqwAAAAFzyfenAA",
+        "BQIuzeAAgEOn7olvChr7aLBFsKOfks2pPklTbMmkd4EVX_poyOhNteB8kpFP9OZM2FdI5bZyAxrcEHSnMPrRjTxJmrbAiQdXw6tZc3XhouLET_i0hPnXt9CbcHy31nZdaRXFEqn0pDhndqGD1GU99EWQh_hySk-xOEJFfqVYB4QSWBdCs8ps5O7i4Fjv8S9ssXm5Hhj_ryVv30c4DesJZJRngVfYufKZ-kCcWh5_6l_puLJeoVwb5eh78GVDEv6OZ6TrgQCQi3NpAnBwEEtFivvG6nEuht0SkntykGEh6Ut7PA-X2KsWz3URk0aKVxkhPIfAOoJMb_-iY-t85xqeB_-zpQgJMwAAAAFdcFd9AA"
+    ],
+    "bot_tokens": [
+        "7685377378:AAFNEbdS7p6XT5oQGmX4j63qAasMV9hBVII",
+        "7863268853:AAFWn_sBr5TayiMk0JYBubjlQ7ABu-D3aq8"
+    ],
+    "allowed_reactions": [
+        "❤️"
+    ],
+    "min_delay": 1.5,
+    "max_delay": 2.5
+}
