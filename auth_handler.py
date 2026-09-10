@@ -1,6 +1,7 @@
 """
 Interactive Telegram Authentication Handler (OTP + 2FA)
-Compatible with Python 3.11
+Compatible with Python 3.11 (Windows / Linux / Android)
+Features: Direct Supabase Cloud Account Sync
 """
 
 from typing import Tuple, Dict, Any
@@ -14,21 +15,17 @@ from pyrogram.errors import (
     FloodWait
 )
 import config
+import database as db
 
 
 class AuthHandler:
     def __init__(self) -> None:
-        # Temporary storage for active in-memory login clients per admin
         self.active_auths: Dict[int, Dict[str, Any]] = {}
 
     async def request_otp(self, admin_id: int, phone_number: str) -> Tuple[bool, str]:
-        """
-        Initializes an in-memory client and sends an OTP code to the given phone number.
-        """
-        # Clean up any existing stale auth session for this admin
+        """Initializes client and sends OTP code to the phone number."""
         await self.cleanup(admin_id)
 
-        # Standardize phone number formatting
         clean_phone = phone_number.strip().replace(" ", "").replace("-", "")
 
         client = Client(
@@ -59,9 +56,7 @@ class AuthHandler:
             return False, f"Telegram Error: {str(e)}"
 
     async def submit_otp(self, admin_id: int, otp_code: str) -> Tuple[str, str]:
-        """
-        Verifies the OTP code. Returns status code and session string or prompt.
-        """
+        """Verifies OTP, exports session, and saves user directly to Supabase."""
         session_data = self.active_auths.get(admin_id)
         if not session_data:
             return "EXPIRED", "Session expired or not found. Please start login again."
@@ -73,9 +68,19 @@ class AuthHandler:
 
         try:
             await client.sign_in(phone, code_hash, clean_otp)
+            me = await client.get_me()
             session_str = await client.export_session_string()
             await client.disconnect()
             del self.active_auths[admin_id]
+
+            # Save directly into Supabase Cloud
+            db.save_account(
+                phone=str(me.phone_number or phone),
+                session_string=session_str,
+                first_name=me.first_name or "User",
+                user_id=int(me.id)
+            )
+
             return "SUCCESS", session_str
         except SessionPasswordNeeded:
             return "2FA_REQUIRED", "Two-Step Verification (2FA) is enabled on this account."
@@ -88,20 +93,29 @@ class AuthHandler:
             return "ERROR", f"Sign-in error: {str(e)}"
 
     async def submit_2fa(self, admin_id: int, password: str) -> Tuple[str, str]:
-        """
-        Verifies the 2FA password and extracts the session string.
-        """
+        """Verifies 2FA password, exports session, and saves user directly to Supabase."""
         session_data = self.active_auths.get(admin_id)
         if not session_data:
             return "EXPIRED", "Session expired. Please restart login."
 
         client: Client = session_data["client"]
+        phone: str = session_data["phone"]
 
         try:
             await client.check_password(password.strip())
+            me = await client.get_me()
             session_str = await client.export_session_string()
             await client.disconnect()
             del self.active_auths[admin_id]
+
+            # Save directly into Supabase Cloud
+            db.save_account(
+                phone=str(me.phone_number or phone),
+                session_string=session_str,
+                first_name=me.first_name or "User",
+                user_id=int(me.id)
+            )
+
             return "SUCCESS", session_str
         except PasswordHashInvalid:
             return "INVALID_PWD", "Incorrect 2FA password. Please try again."
