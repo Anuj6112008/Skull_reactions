@@ -1,12 +1,13 @@
 """
 Automated Reaction Worker & Multi-Account Dispatcher
 Compatible with Python 3.11
-Fixed: Direct Telegram Bot API HTTP Engine for Sub-Bots (Zero Peer Issues)
+Fixed: SSL Certificate Verification Bypass (Fixes CERTIFICATE_VERIFY_FAILED)
 """
 
 import asyncio
 import json
 import random
+import ssl
 import urllib.request
 import urllib.error
 from pyrogram import Client
@@ -19,6 +20,9 @@ from pyrogram.errors import (
 
 import config
 import database as db
+
+# Create universal SSL context to bypass antivirus / proxy SSL inspection
+SSL_CONTEXT = ssl._create_unverified_context()
 
 
 async def resolve_and_get_chat(client: Client, chat_id: int, channel_link: str = None):
@@ -60,35 +64,35 @@ async def send_reaction_from_user(
             emoji=emoji
         )
         await user_client.disconnect()
-        print(f"✅ [User Reaction] Sent {emoji} on post {message_id}")
+        print(f"[User Reaction OK] Sent {emoji} on post {message_id}")
         return True
     except FloodWait as e:
         try:
             await user_client.disconnect()
         except Exception:
             pass
-        print(f"⚠️ [User Reaction FloodWait] Waiting {e.value}s")
+        print(f"[User Reaction FloodWait] Waiting {e.value}s")
         return False
     except (ReactionInvalid, UserNotParticipant) as err:
         try:
             await user_client.disconnect()
         except Exception:
             pass
-        print(f"⚠️ [User Reaction Skipped] {err}")
+        print(f"[User Reaction Skipped] {err}")
         return False
     except Exception as err:
         try:
             await user_client.disconnect()
         except Exception:
             pass
-        print(f"❌ [User Reaction Error] {err}")
+        print(f"[User Reaction Error] {err}")
         return False
 
 
 def _send_bot_api_reaction_sync(bot_token: str, chat_id: int, message_id: int, emoji: str) -> bool:
     """
     Executes standard Telegram Bot API setMessageReaction method.
-    Accepts raw -100 numeric chat IDs directly with zero peer cache errors.
+    Uses custom SSL context to prevent Windows CERTIFICATE_VERIFY_FAILED crashes.
     """
     url = f"https://api.telegram.org/bot{bot_token}/setMessageReaction"
     payload = {
@@ -106,15 +110,15 @@ def _send_bot_api_reaction_sync(bot_token: str, chat_id: int, message_id: int, e
     )
 
     try:
-        with urllib.request.urlopen(req, timeout=10) as response:
+        with urllib.request.urlopen(req, timeout=10, context=SSL_CONTEXT) as response:
             res_data = json.loads(response.read().decode("utf-8"))
             return res_data.get("ok", False)
     except urllib.error.HTTPError as e:
         error_body = e.read().decode("utf-8")
-        print(f"❌ [Sub-Bot API Error] HTTP {e.code}: {error_body}")
+        print(f"[Sub-Bot API Error] HTTP {e.code}: {error_body}")
         return False
     except Exception as e:
-        print(f"❌ [Sub-Bot Request Error] {e}")
+        print(f"[Sub-Bot Request Error] {e}")
         return False
 
 
@@ -133,7 +137,7 @@ async def send_reaction_from_bot(
         emoji
     )
     if success:
-        print(f"✅ [Sub-Bot Reaction] Sent {emoji} on post {message_id}")
+        print(f"[Sub-Bot Reaction OK] Sent {emoji} on post {message_id}")
     return success
 
 
@@ -169,7 +173,7 @@ async def dispatch_safe_reactions(chat_id: int, message_id: int) -> None:
             )
             await asyncio.sleep(random.uniform(min_delay, max_delay))
 
-    # 2. Dispatch Sub-Bots Reactions (Direct Bot API)
+    # 2. Dispatch Sub-Bots Reactions (Direct Bot API with SSL bypass)
     if bot_tokens:
         tokens_list = list(bot_tokens)
         random.shuffle(tokens_list)
